@@ -1,10 +1,47 @@
-{
-  "transactionId": "624deea6-b709-470c-8c39-4b5511281492",
-  "customerTransactionId": "AnyCo_order123456789",
-  "errors": [
-    {
-      "code": "TRACKING.TRACKINGNUMBER.EMPTY",
-      "message": "Please provide tracking number."
+[
+  {
+    "error": {
+      "code": "404",
+      "request_id": "def456",
+      "title": "Delivery Not Found",
+      "message": "The specified delivery ID was not found in the system.",
+      "details": [
+        {
+          "reason": "Invalid ID",
+          "field": "delivery_id",
+          "message": "The delivery ID 'DEL98765' does not exist."
+        }
+      ]
     }
-  ]
-}
+  },
+  {
+    "error": {
+      "code": "400",
+      "request_id": "ghi789",
+      "title": "Missing Recipient Address",
+      "message": "The recipient address is required for delivery.",
+      "details": [
+        {
+          "reason": "Missing Data",
+          "field": "recipient_address",
+          "message": "The recipient address is missing or incomplete."
+        }
+      ]
+    }
+  },
+  {
+    "error": {
+      "code": "403",
+      "request_id": "jkl012",
+      "title": "Delivery Location Closed",
+      "message": "The delivery location is closed at the specified time.",
+      "details": [
+        {
+          "reason": "Closed Location",
+          "field": "delivery_time",
+          "message": "Delivery cannot be made at this time as the location is closed."
+        }
+      ]
+    }
+  }
+]

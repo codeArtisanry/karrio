@@ -6,6 +6,9 @@ import karrio.core.models as models
 import karrio.providers.ninja_van.error as error
 import karrio.providers.ninja_van.utils as provider_utils
 import karrio.providers.ninja_van.units as provider_units
+import karrio.schemas.ninja_van.rating_response as rating
+import karrio.schemas.ninja_van.rating_request as ninja_van
+
 
 
 def parse_rate_response(
@@ -24,13 +27,12 @@ def _extract_details(
     data: dict,
     settings: provider_utils.Settings,
 ) -> models.RateDetails:
-    rate = None  # parse carrier rate type
-
+    rate = lib.to_object(rating.RatingResponseType, data)
     return models.RateDetails(
         carrier_id=settings.carrier_id,
         carrier_name=settings.carrier_name,
         service="",  # extract service from rate
-        total_charge=lib.to_money(0.0),  # extract the rate total rate cost
+        total_charge=lib.to_money(rate.data.total_fee),  # extract the rate total rate cost
         currency="",  # extract the rate pricing currency
         transit_days=0,  # extract the rate transit days
         meta=dict(
@@ -53,6 +55,17 @@ def rate_request(
     )
 
     # map data to convert karrio model to ninja_van specific type
-    request = None
+    request = ninja_van.RatingRequestType(
+        weight=packages.weight,
+        service_level=services.first,
+        from_location=ninja_van.LocationType(
+            l1_tier_code=shipper.state_code,
+            l2_tier_code=shipper.postal_code,
+        ),
+        to_location=ninja_van.LocationType(
+            l1_tier_code=recipient.state_code,
+            l2_tier_code=recipient.postal_code,
+        ),
+    )
 
     return lib.Serializable(request, lib.to_dict)
